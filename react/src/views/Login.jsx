@@ -1,22 +1,43 @@
 import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import axiosClient from '../AxiosClient';
+import { useStateContext } from '../contexts/ContextProvider';
 
 export default function Login() {
 
   const emailRef = useRef();
   const passwordRef = useRef();
 
+  const {setUser,setToken} = useStateContext();
+
   const [errors, setErrors] = useState(null);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    
+    setErrors(null);
     const payload = {
-      username: emailRef.current.value,
-      password_confirmation: passwordRef.current.value
+      email: emailRef.current.value,
+      password: passwordRef.current.value
     }
 
-    console.log(payload);
+    axiosClient.post("/login", payload)
+      .then(({data})=>{
+        setUser(data.user);
+        setToken(data.token);
+      })
+      .catch(error=>{
+        const response = error.response;
+        if(response && response.status === 422) {
+          if(response.data.errors)
+          {
+            setErrors(response.data.errors);
+          } else {
+            setErrors({
+              email: [response.data.message]
+            });
+          }
+        }
+      })
   }
 
   return (

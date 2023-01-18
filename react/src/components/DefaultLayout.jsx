@@ -5,7 +5,9 @@ import Footer from '../views/Footer';
 import Header from '../views/Header';
 
 export default function DefaultLayout() {
-  const {user, token} = useStateContext();
+  
+  const {token} = useStateContext();
+
   if(!token){
     return(
       <Navigate to="/login" />
@@ -14,7 +16,7 @@ export default function DefaultLayout() {
 
   return (
     <>
-      <Header user={user}/>
+      <Header/>
       <main>
         <Outlet />
       </main>
