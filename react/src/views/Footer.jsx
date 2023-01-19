@@ -2,6 +2,6 @@ import React from 'react'
 
 export default function Footer() {
     return (
-        <footer>Footer</footer>
+        <footer>Copyright ©2023 Terciel. All rights reserved</footer>
     )
 }

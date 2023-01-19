@@ -24,24 +24,38 @@ export default function Header() {
 
     },[]);
 
-    const handleClick = (e) => {
-        e.preventDefault();
-        console.log(user);
+    const handleClick = (event) => {
+        event.preventDefault();
+        const navLinks = document.querySelectorAll(".nav-link");
+        for(let i=0; i<navLinks.length; i++)
+        {
+            navLinks[i].classList.remove("active");
+        }
+        event.target.classList.add("active");
+        const formTabs = document.querySelectorAll(".form-tab");
+        for(let i=0; i<formTabs.length; i++)
+        {
+            formTabs[i].classList.remove("active");
+        }
+        if(event.target.name)
+        {
+            document.getElementById(event.target.name).classList.add("active");
+        }
     }
     return (
         <header>
             <div className="container">
-                <nav>
+                <nav className="row">
                     <img src={logo} alt="Logo" />
                     <ul>
-                        <li><a href="#">Item</a></li>
-                        <li><a href="#">Vendor</a></li>
-                        <li><a href="#">Customer</a></li>
-                        <li><a href="#">Purchase</a></li>
-                        <li><a href="#">Sale</a></li>
-                        <li><a href="#">Reports</a></li>
-                        <li><a href="#" onClick={handleClick}>{user.name}</a></li>
-                        <li><a href="#" onClick={logoutUser}>Logout</a></li>
+                        <li><a className="nav-link active" onClick={handleClick} name="item">Item</a></li>
+                        <li><a className="nav-link" onClick={handleClick} name="vendor">Vendor</a></li>
+                        <li><a className="nav-link" onClick={handleClick} name="customer">Customer</a></li>
+                        <li><a className="nav-link" onClick={handleClick} name="purchase">Purchase</a></li>
+                        <li><a className="nav-link" onClick={handleClick} name="sale">Sale</a></li>
+                        <li><a className="nav-link" onClick={handleClick} name="reports">Reports</a></li>
+                        <li><a className="nav-link" onClick={handleClick}>{user.name}</a></li>
+                        <li><a className="nav-link" onClick={logoutUser}>Logout</a></li>
                     </ul>
                 </nav>
             </div>

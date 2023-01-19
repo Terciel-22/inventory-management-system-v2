@@ -10,7 +10,7 @@ export default function GuestLayout() {
         );
     }
     return (
-        <main id="form-page">
+        <main id="form-page" className="row">
             <Outlet />
         </main>
     )
