@@ -16,12 +16,12 @@ return new class extends Migration
         Schema::create('items', function (Blueprint $table) {
             $table->id();
             $table->integer('item_number')->unique();
-            $table->string('item_name')->unsigned();
+            $table->string('item_name');
             $table->integer('discount')->unsigned();
             $table->integer('stock')->unsigned();
             $table->integer('unit_price')->unsigned();
-            $table->string('image_url');
-            $table->string('status');
+            $table->string('image_url')->default('image-not-available.jpg');
+            $table->string('status')->default('active');
             $table->text('description')->nullable();
             $table->timestamps();
         });

@@ -24,7 +24,7 @@ class UpdateItemRequest extends FormRequest
     public function rules()
     {
         return [
-            'item_number' => 'required|integer|unique:items,item_number',
+            'item_number' => 'required|integer|unique:items,item_number'.$this->id,
             'item_name' => 'required|string',
             'discount' => 'required|integer',
             'stock' => 'required|integer',

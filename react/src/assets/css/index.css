@@ -34,6 +34,17 @@ button:hover {
     background: #ff004f;
     color: white;
 }
+button:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+input:disabled::placeholder {
+    color: rgba(255, 255, 255, 0.8);
+}
+input:disabled {
+    color: rgba(255, 255, 255, 0.8);
+}
+
 a {
     text-decoration: none;
 }

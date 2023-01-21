@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Item;
+use Illuminate\Http\Request;
 use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
 use App\Http\Resources\ItemResource;
@@ -81,5 +82,16 @@ class ItemController extends Controller
     {
         $item->delete();
         return response("", 204);
+    }
+
+    public function getItemByItemNumber(Request $request)
+    {
+        $input = $request->validate([
+            'item_number' => 'required|numeric' // validate
+        ]);
+        $item = Item::where("item_number", $input)
+            ->firstOrFail();
+
+        return new ItemResource($item);
     }
 }
