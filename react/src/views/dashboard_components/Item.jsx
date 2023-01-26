@@ -42,10 +42,10 @@ export default function Item() {
   const handleClick = (event) => {
     event.preventDefault();
 
+    const itemFormData = new FormData(itemFormRef.current);
+
     if(event.target.name === "add")
     {
-      const itemFormData = new FormData(itemFormRef.current);
-      console.log(itemFormData);
       axiosClient.post("/items", itemFormData)
       .then(()=>{
         alert("Successfully added item.");
@@ -55,8 +55,33 @@ export default function Item() {
         if(response && response.status === 422) {
           setErrors(response.data.errors);
         }
+      });
+    } 
+    else if(event.target.name === "update")
+    {
+      axiosClient.post(`/items/${productIDRef.current.value}?_method=PUT`,itemFormData)
+      .then(()=>{
+        alert("Successfully updated item.");
       })
-    } else if(event.target.name === "reset")
+      .catch(error=>{
+        const response = error.response;
+        if(response && response.status === 422) {
+          setErrors(response.data.errors);
+        }
+      });
+    } 
+    else if(event.target.name === "delete")
+    {
+      if(window.confirm("Are you sure you want to delete this item?"))
+      {
+        axiosClient.delete(`/items/${productIDRef.current.value}`)
+        .then(()=>{
+          alert("Successfully deleted item.");
+          resetForm();
+        })
+      }
+    } 
+    else if(event.target.name === "reset")
     {
       itemNumberRef.current.value = "";
       resetForm();
@@ -201,8 +226,8 @@ export default function Item() {
         </div>
         <div className="buttons row">
           <button ref={addButtonRef} type="button" onClick={handleClick} name="add">Add</button>
-          <button ref={updateButtonRef} type="button" onClick={handleClick} name="update" disabled>Update</button>
-          <button ref={deleteButtonRef} type="button" onClick={handleClick} name="delete" disabled>Delete</button>
+          <button ref={updateButtonRef} type="button" onClick={handleClick} name="update">Update</button>
+          <button ref={deleteButtonRef} type="button" onClick={handleClick} name="delete">Delete</button>
           <button type="button" onClick={handleClick} name="reset">Reset</button>
         </div>
     </form>

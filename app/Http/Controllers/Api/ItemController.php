@@ -66,8 +66,17 @@ class ItemController extends Controller
     public function update(UpdateItemRequest $request, Item $item)
     {
         $data = $request->validated();
-        $item->update($data);
+        
+        if($request->hasFile("image_url"))
+        {
+            $image = $request->image_url;
+            $imageName = time().".".$image->getClientOriginalExtension();
+            $path = public_path("images");
+            $image->move($path,$imageName);
+            $data["image_url"] = "http://localhost:8000/images/".$imageName;
+        }
 
+        $item->update($data);
         return new ItemResource($item);
     }
 

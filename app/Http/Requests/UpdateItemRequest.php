@@ -24,14 +24,14 @@ class UpdateItemRequest extends FormRequest
     public function rules()
     {
         return [
-            'item_number' => 'required|integer|unique:items,item_number'.$this->id,
+            'item_number' => 'required|integer|unique:items,item_number,'.$this->item->id,
             'item_name' => 'required|string',
-            'discount' => 'required|integer',
-            'stock' => 'required|integer',
-            'unit_price' => 'required|integer',
-            'image_url' => 'nullable|required|string',
+            'description' => 'required|string',
+            'stock' => 'numeric|min:0',
+            'discount' => 'numeric|min:0',
+            'unit_price' => 'numeric|min:1',
+            'image_url' => 'nullable|image|max:2048',
             'status' => 'required|string',
-            'description' => 'string',
         ];
     }
 }
