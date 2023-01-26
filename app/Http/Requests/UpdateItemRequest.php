@@ -29,7 +29,7 @@ class UpdateItemRequest extends FormRequest
             'discount' => 'required|integer',
             'stock' => 'required|integer',
             'unit_price' => 'required|integer',
-            'image_url' => 'required|string',
+            'image_url' => 'nullable|required|string',
             'status' => 'required|string',
             'description' => 'string',
         ];

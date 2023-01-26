@@ -30,7 +30,7 @@ class StoreItemRequest extends FormRequest
             'stock' => 'numeric|min:0',
             'discount' => 'numeric|min:0',
             'unit_price' => 'numeric|min:1',
-            'image_url' => 'image|max:2048',
+            'image_url' => 'nullable|image|max:2048',
             'status' => 'required|string',
         ];
     }

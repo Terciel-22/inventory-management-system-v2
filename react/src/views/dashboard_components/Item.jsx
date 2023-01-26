@@ -33,7 +33,6 @@ export default function Item() {
     axiosClient.get("/items")
       .then(({data})=>{
         setLoading(false);
-        console.log(data);
       })
       .catch(()=>{
         setLoading(false);
@@ -97,7 +96,13 @@ export default function Item() {
   }
 
   const displayDataToFormField = (data) => {
-    imageURLRef.current.src = data.image_url;
+    if(data.image_url)
+    {
+      imageURLRef.current.src = data.image_url;
+    } else 
+    {
+      imageURLRef.current.src = imageNotAvailable;
+    }
     productIDRef.current.value = data.id;
     itemNameRef.current.value = data.item_name;
     statusRef.current.value = data.status;
@@ -139,7 +144,7 @@ export default function Item() {
           <div className="column-1">
             <label htmlFor="item-image">Image <br />
               <input type="file" name="image_url" id="item-image" accept="image/*" onChange={handleFileInput}/>
-              <img  ref={imageURLRef} alt="Image not available" />
+              <img  ref={imageURLRef} alt="Item image" />
             </label>
           </div>
           <div className="column-2">

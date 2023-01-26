@@ -32,16 +32,15 @@ class ItemController extends Controller
     public function store(StoreItemRequest $request)
     {
         $data = $request->validated();
-        // $item = Item::create([
-        //     'item_number'=> $data["item_number"],
-        //     'item_name'=> $data["item_name"],
-        //     'discount'=> $data["discount"],
-        //     'stock'=> $data["stock"],
-        //     'unit_price'=> $data["unit_price"],
-        //     'image_url'=> $data["image_url"],
-        //     'status'=> $data["status"],
-        //     'description'=> $data["description"],
-        // ]);
+        
+        if($request->hasFile("image_url"))
+        {
+            $image = $request->image_url;
+            $imageName = time().".".$image->getClientOriginalExtension();
+            $path = public_path("images");
+            $image->move($path,$imageName);
+            $data["image_url"] = "http://localhost:8000/images/".$imageName;
+        }
         $item = Item::create($data);
         return response(new ItemResource($item), 201);
     }
