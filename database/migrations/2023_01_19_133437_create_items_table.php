@@ -20,7 +20,7 @@ return new class extends Migration
             $table->integer('discount')->unsigned();
             $table->integer('stock')->unsigned();
             $table->integer('unit_price')->unsigned();
-            $table->string('image_url')->default('image-not-available.jpg');
+            $table->string('image_url')->nullable();
             $table->string('status')->default('active');
             $table->text('description')->nullable();
             $table->timestamps();

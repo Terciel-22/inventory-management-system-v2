@@ -2,10 +2,11 @@ import React, { useEffect, useRef } from 'react';
 import { useState } from 'react';
 import imageNotAvailable from "../../assets/img/image-not-available.jpg"
 import axiosClient from '../../AxiosClient';
+import { useStateContext } from '../../contexts/ContextProvider';
 
 export default function Item() {
   
-  const [loading, setLoading] = useState(false);
+  const {setNotification} = useStateContext();
   const [errors, setErrors] = useState(null);
   const itemFormRef = useRef();
   const imageURLRef = useRef();
@@ -19,25 +20,12 @@ export default function Item() {
   const quantityRef = useRef();
   const unitPriceRef = useRef();
   const totalStockRef = useRef();
-  const addButtonRef = useRef();
   const updateButtonRef = useRef();
   const deleteButtonRef = useRef();
 
   useEffect(()=>{
-    getItems();
     resetForm();
   },[]);
-
-  const getItems = () => {
-    setLoading(true);
-    axiosClient.get("/items")
-      .then(({data})=>{
-        setLoading(false);
-      })
-      .catch(()=>{
-        setLoading(false);
-      });
-  }
   
   const handleClick = (event) => {
     event.preventDefault();
@@ -48,7 +36,8 @@ export default function Item() {
     {
       axiosClient.post("/items", itemFormData)
       .then(()=>{
-        alert("Successfully added item.");
+        setNotification("Successfully added item.");
+        setErrors("");
       })
       .catch(error=>{
         const response = error.response;
@@ -61,7 +50,8 @@ export default function Item() {
     {
       axiosClient.post(`/items/${productIDRef.current.value}?_method=PUT`,itemFormData)
       .then(()=>{
-        alert("Successfully updated item.");
+        setNotification("Successfully updated item.");
+        setErrors("");
       })
       .catch(error=>{
         const response = error.response;
@@ -76,7 +66,7 @@ export default function Item() {
       {
         axiosClient.delete(`/items/${productIDRef.current.value}`)
         .then(()=>{
-          alert("Successfully deleted item.");
+          setNotification("Successfully deleted item.");
           resetForm();
         })
       }
@@ -97,9 +87,9 @@ export default function Item() {
       const payload = {
         item_number: value
       }
-      setLoading(true);
       axiosClient.post("/item", payload)
         .then(({data})=>{
+          setErrors("");
           displayDataToFormField(data);
         })
         .catch(()=>{
@@ -153,6 +143,7 @@ export default function Item() {
     totalStockRef.current.value = "";
     updateButtonRef.current.setAttribute("disabled",true);
     deleteButtonRef.current.setAttribute("disabled",true);
+    setErrors("");
   }
 
   return (
@@ -225,7 +216,7 @@ export default function Item() {
           </div>
         </div>
         <div className="buttons row">
-          <button ref={addButtonRef} type="button" onClick={handleClick} name="add">Add</button>
+          <button type="button" onClick={handleClick} name="add">Add</button>
           <button ref={updateButtonRef} type="button" onClick={handleClick} name="update">Update</button>
           <button ref={deleteButtonRef} type="button" onClick={handleClick} name="delete">Delete</button>
           <button type="button" onClick={handleClick} name="reset">Reset</button>

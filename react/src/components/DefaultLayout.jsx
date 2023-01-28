@@ -6,7 +6,7 @@ import Header from '../views/Header';
 
 export default function DefaultLayout() {
   
-  const {token} = useStateContext();
+  const {token, notification} = useStateContext();
 
   if(!token){
     return(
@@ -18,6 +18,9 @@ export default function DefaultLayout() {
     <>
       <Header/>
       <main>
+        {notification && <div className="notification">
+          {notification}
+        </div>}
         <Outlet />
       </main>
       <Footer />
