@@ -28,7 +28,9 @@ class VendorController extends Controller
      */
     public function store(StoreVendorRequest $request)
     {
-        //
+        $data = $request->validated();
+        $vendor = Vendor::create($data);
+        return response(new VendorResource($vendor), 201);
     }
 
     /**
@@ -64,6 +66,7 @@ class VendorController extends Controller
      */
     public function destroy(Vendor $vendor)
     {
-        //
+        $vendor->delete();
+        return response("", 204);
     }
 }

@@ -20,6 +20,7 @@ export default function Vendor(){
   const barangayRef = useRef();
   const updateButtonRef = useRef();
   const deleteButtonRef = useRef();
+  const NCR_CODE = "130000000";
 
   useEffect(()=>{
     resetForm();
@@ -35,14 +36,43 @@ export default function Vendor(){
   
   const handleClick = (event) => {
     event.preventDefault();
+    if(event.target.name === "reset")
+    {
+      resetForm();
+      return;
+    }
 
     const vendorFormData = new FormData(vendorFormRef.current);
     if(regionRef.current.value === "NCR")
     {
       vendorFormData.append("province","")
+    } else if (event.target.name === "delete")
+    {
+      if(window.confirm("Are you sure you want to delete this vendor?"))
+      {
+        axiosClient.delete(`/vendors/${vendorIDRef.current.value}`)
+        .then(()=>{
+          setNotification("Successfully deleted vendor.");
+          resetForm();
+        })
+      }
     }
 
-    if(event.target.name === "update")
+    if(event.target.name === "add")
+    {
+      axiosClient.post(`/vendors`,vendorFormData)
+      .then(()=>{
+        setNotification("Successfully added vendor.");
+        setErrors("");
+      })
+      .catch(error=>{
+        const response = error.response;
+        if(response && response.status === 422) {
+          setErrors(response.data.errors);
+        }
+      });
+    }
+    else if(event.target.name === "update")
     {
       axiosClient.post(`/vendors/${vendorIDRef.current.value}?_method=PUT`,vendorFormData)
       .then(()=>{
@@ -55,10 +85,6 @@ export default function Vendor(){
           setErrors(response.data.errors);
         }
       });
-    }
-    else if(event.target.name === "reset")
-    {
-      resetForm();
     }
   }
   const handleChange = (event) => {
@@ -91,7 +117,7 @@ export default function Vendor(){
       barangayRef.current.innerHTML = `<option value="" hidden>--Select Barangay--</option>`;
       const regionCode = event.target.options[event.target.selectedIndex].id;
 
-      if(event.target.value !== "NCR")
+      if(regionCode !== NCR_CODE)
       {
         getProvinces(regionCode);
       }else {
@@ -114,12 +140,12 @@ export default function Vendor(){
       barangayRef.current.setAttribute("disabled",true);
       barangayRef.current.innerHTML = `<option value="" hidden>--Select Barangay--</option>`;
 
-      const cityMunicipalitycode = event.target.options[event.target.selectedIndex].id;
-      getBarangays(cityMunicipalitycode);
+      const cityMunicipalityCode = event.target.options[event.target.selectedIndex].id;
+      getBarangays(cityMunicipalityCode);
     }
   }
-  const getProvinces = (regionCode) => {
-    fetch(`https://psgc.gitlab.io/api/regions/${regionCode}/provinces/`)
+  const getProvinces = async (regionCode) => {
+    return fetch(`https://psgc.gitlab.io/api/regions/${regionCode}/provinces/`)
       .then(response => response.json())
       .then((provinces)=>{
         Object.values(provinces).forEach(province => {
@@ -130,35 +156,28 @@ export default function Vendor(){
         provinceRef.current.removeAttribute("disabled");
       });
   }
-  const getCityAndMunicipalities = (provinceCode) => {
-    if(provinceCode === "130000000")
+  const getCityAndMunicipalities = async (provinceCode) => {
+    let url = "";
+    if(provinceCode === NCR_CODE)
     {
-      fetch(`https://psgc.gitlab.io/api/regions/${provinceCode}/cities-municipalities/`)
-        .then(response => response.json())
-        .then((cities)=>{
-          Object.values(cities).forEach(city => {
-            cityMunicipalityRef.current.innerHTML += `<option value="${city.name}" id="${city.code}">${city.name}</option>`;
-          });
-        })
-        .then(()=>{
-          cityMunicipalityRef.current.removeAttribute("disabled");
-        });
+      url = `https://psgc.gitlab.io/api/regions/${provinceCode}/cities-municipalities/`;
     } else 
     {
-      fetch(`https://psgc.gitlab.io/api/provinces/${provinceCode}/cities-municipalities/`)
-        .then(response => response.json())
-        .then((cities)=>{
-          Object.values(cities).forEach(city => {
-            cityMunicipalityRef.current.innerHTML += `<option value="${city.name}" id="${city.code}">${city.name}</option>`;
-          });
-        })
-        .then(()=>{
-          cityMunicipalityRef.current.removeAttribute("disabled");
-        });
+      url = `https://psgc.gitlab.io/api/provinces/${provinceCode}/cities-municipalities/`;
     }
+    return fetch(url)
+      .then(response => response.json())
+      .then((cities)=>{
+        Object.values(cities).forEach(city => {
+          cityMunicipalityRef.current.innerHTML += `<option value="${city.name}" id="${city.code}">${city.name}</option>`;
+        });
+      })
+      .then(()=>{
+        cityMunicipalityRef.current.removeAttribute("disabled");
+      });
   }
-  const getBarangays = (cityMunicipalitycode) => {
-    fetch(`https://psgc.gitlab.io/api/cities-municipalities/${cityMunicipalitycode}/barangays/`)
+  const getBarangays = async (cityMunicipalityCode) => {
+    return fetch(`https://psgc.gitlab.io/api/cities-municipalities/${cityMunicipalityCode}/barangays/`)
       .then(response => response.json())
       .then((barangays)=>{
         Object.values(barangays).forEach(barangay => {
@@ -169,24 +188,39 @@ export default function Vendor(){
         barangayRef.current.removeAttribute("disabled");
       });
   }
-  const displayDataToFormField = (data) => {
+  const displayDataToFormField = async (data) => {
+    resetForm();
     fullNameRef.current.value = data.full_name;
     statusRef.current.value = data.status;
     mobileRef.current.value = data.mobile;
     telephoneRef.current.value = data.telephone;
     emailRef.current.value = data.email;
     addressRef.current.value = data.address;
-    regionRef.current.value = data.region;
+    regionRef.current.value = await data.region;
+    const regionCode = await regionRef.current.options[regionRef.current.selectedIndex].id;
 
-    if(data.province)
+    if(regionCode !== NCR_CODE)
     {
-      console.log(data.province);
-      provinceRef.current.innerHTML = `<option value=${data.province}>${data.province}</option>`;
+      await getProvinces(regionCode);
+      provinceRef.current.value = await data.province;
+      const provinceCode = await provinceRef.current.options[provinceRef.current.selectedIndex].id;
       provinceRef.current.removeAttribute("disabled");
-    }
 
-    cityMunicipalityRef.current.innerHTML = `<option value=${data.city_municipality}>${data.city_municipality}</option>`;
-    barangayRef.current.innerHTML = `<option value=${data.barangay}>${data.barangay}</option>`;
+      await getCityAndMunicipalities(provinceCode);
+      cityMunicipalityRef.current.value = await data.city_municipality;
+      const cityMunicipalityCode = await cityMunicipalityRef.current.options[cityMunicipalityRef.current.selectedIndex].id;
+
+      await getBarangays(cityMunicipalityCode);
+      barangayRef.current.value = await data.barangay;
+    } else 
+    {
+      await getCityAndMunicipalities(regionCode);
+      cityMunicipalityRef.current.value = await data.city_municipality;
+      const cityMunicipalityCode = await cityMunicipalityRef.current.options[cityMunicipalityRef.current.selectedIndex].id;
+      
+      await getBarangays(cityMunicipalityCode);
+      barangayRef.current.value = await data.barangay;
+    }
     cityMunicipalityRef.current.removeAttribute("disabled");
     barangayRef.current.removeAttribute("disabled");
   }
@@ -201,7 +235,10 @@ export default function Vendor(){
     provinceRef.current.value = "";
     cityMunicipalityRef.current.value = "";
     barangayRef.current.value = "";
-
+    
+    provinceRef.current.innerHTML = `<option value="" hidden>--Select Province--</option>`;
+    cityMunicipalityRef.current.innerHTML = `<option value="" hidden>--Select City/Municipality--</option>`;
+    barangayRef.current.innerHTML = `<option value="" hidden>--Select Barangay--</option>`;
     provinceRef.current.setAttribute("disabled",true);
     cityMunicipalityRef.current.setAttribute("disabled",true);
     barangayRef.current.setAttribute("disabled",true);
