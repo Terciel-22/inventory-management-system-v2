@@ -24,16 +24,16 @@ class UpdateVendorRequest extends FormRequest
     public function rules()
     {
         return [
-            'full_name' => 'string|required',
-            'mobile' => 'string|required',
-            'telephone' => 'string|required',
-            'email' => 'string|required',
-            'address' => 'string|required',
-            'region' => 'string|required',
+            'full_name' => 'required|string|',
+            'mobile' => 'required|numeric|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+            'telephone' => 'nullable|string|regex:/^([0-9\s\-\+\(\)]*)$/|max:11',
+            'email' => 'required|email|unique:customers,email,'.$this->vendor->id,
+            'address' => 'required|string|',
+            'region' => 'required|string|',
             'province' => 'nullable',
-            'city_municipality' => 'string|required',
-            'barangay' => 'string|required',
-            'status' => 'string|required',
+            'city_municipality' => 'required|string|',
+            'barangay' => 'required|string|',
+            'status' => 'required|string|',
         ];
     }
 }

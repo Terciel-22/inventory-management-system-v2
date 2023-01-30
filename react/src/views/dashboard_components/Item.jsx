@@ -22,6 +22,7 @@ export default function Item() {
   const totalStockRef = useRef();
   const updateButtonRef = useRef();
   const deleteButtonRef = useRef();
+  const REGEX_NUMBER = /^[0-9]+$/;
 
   useEffect(()=>{
     resetForm();
@@ -29,6 +30,24 @@ export default function Item() {
   
   const handleClick = (event) => {
     event.preventDefault();
+    if(event.target.name === "reset")
+    {
+      itemNumberRef.current.value = "";
+      resetForm();
+      return;
+    } 
+    else if(event.target.name === "delete")
+    {
+      if(window.confirm("Are you sure you want to delete this item?"))
+      {
+        axiosClient.delete(`/items/${productIDRef.current.value}`)
+        .then(()=>{
+          setNotification("Successfully deleted item.");
+          resetForm();
+        })
+      }
+      return;
+    } 
 
     const itemFormData = new FormData(itemFormRef.current);
 
@@ -59,33 +78,16 @@ export default function Item() {
           setErrors(response.data.errors);
         }
       });
-    } 
-    else if(event.target.name === "delete")
-    {
-      if(window.confirm("Are you sure you want to delete this item?"))
-      {
-        axiosClient.delete(`/items/${productIDRef.current.value}`)
-        .then(()=>{
-          setNotification("Successfully deleted item.");
-          resetForm();
-        })
-      }
-    } 
-    else if(event.target.name === "reset")
-    {
-      itemNumberRef.current.value = "";
-      resetForm();
     }
   }
-
   const handleChange = (event) => {
     
-    const value = event.target.value;
+    const itemNumber = event.target.value;
     
-    if(value !== "")
+    if(itemNumber.match(REGEX_NUMBER))
     {
       const payload = {
-        item_number: value
+        item_number: itemNumber
       }
       axiosClient.post("/item", payload)
         .then(({data})=>{
@@ -100,7 +102,6 @@ export default function Item() {
       resetForm();
     }
   }
-
   const handleFileInput = (event) => {
     const uploadedFile = event.target.files[0];
     if(uploadedFile)
@@ -109,7 +110,6 @@ export default function Item() {
       imageURLRef.current.src = path;
     }
   }
-
   const displayDataToFormField = (data) => {
     if(data.image_url)
     {
@@ -129,12 +129,11 @@ export default function Item() {
     updateButtonRef.current.removeAttribute("disabled");
     deleteButtonRef.current.removeAttribute("disabled");
   }
-  
   const resetForm = () => {
     imageURLRef.current.src = imageNotAvailable;
     productIDRef.current.value = "";
     itemNameRef.current.value = "";
-    statusRef.current.value = "active";
+    statusRef.current.value = "";
     dateCreatedRef.current.value = "";
     descriptionRef.current.value = "";
     discountRef.current.value = 0;
@@ -182,6 +181,7 @@ export default function Item() {
               <div className="form-group">
                 <label htmlFor="item-status">Status</label>
                 <select ref={statusRef} name="status" id="item-status">
+                  <option value="" hidden>--Select Status--</option>
                   <option value="active">Active</option>
                   <option value="disabled">Disabled</option>
                 </select>

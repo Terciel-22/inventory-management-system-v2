@@ -21,6 +21,7 @@ export default function Vendor(){
   const updateButtonRef = useRef();
   const deleteButtonRef = useRef();
   const NCR_CODE = "130000000";
+  const REGEX_NUMBER = /^[0-9]+$/;
 
   useEffect(()=>{
     resetForm();
@@ -41,12 +42,7 @@ export default function Vendor(){
       resetForm();
       return;
     }
-
-    const vendorFormData = new FormData(vendorFormRef.current);
-    if(regionRef.current.value === "NCR")
-    {
-      vendorFormData.append("province","")
-    } else if (event.target.name === "delete")
+    else if (event.target.name === "delete")
     {
       if(window.confirm("Are you sure you want to delete this vendor?"))
       {
@@ -56,8 +52,15 @@ export default function Vendor(){
           resetForm();
         })
       }
+      return;
     }
 
+    const vendorFormData = new FormData(vendorFormRef.current);
+    if(regionRef.current.value === "NCR")
+    {
+      vendorFormData.append("province","")
+    } 
+    
     if(event.target.name === "add")
     {
       axiosClient.post(`/vendors`,vendorFormData)
@@ -90,8 +93,8 @@ export default function Vendor(){
   const handleChange = (event) => {
     if(event.target.name === "id"){
       const vendorID = event.target.value;
-      
-      if(vendorID !== "")
+
+      if(vendorID.match(REGEX_NUMBER))
       {
         axiosClient.get(`/vendors/${vendorID}`)
           .then(({data})=>{
@@ -245,6 +248,8 @@ export default function Vendor(){
 
     updateButtonRef.current.setAttribute("disabled",true);
     deleteButtonRef.current.setAttribute("disabled",true);
+
+    setErrors("");
   }
 
   return (
@@ -256,6 +261,7 @@ export default function Vendor(){
           })}
         </div>
       }
+      <h1>Vendor</h1>
       <div className="row">
         <div className="form-group">
           <label htmlFor="vendor-full-name">Full Name</label>
@@ -264,6 +270,7 @@ export default function Vendor(){
         <div className="form-group">
           <label htmlFor="vendor-status">Status</label>
           <select name="status" id="vendor-status" ref={statusRef}>
+            <option value="" hidden>--Select Status--</option>
             <option value="active">Active</option>
             <option value="disabled">Disabled</option>
           </select>

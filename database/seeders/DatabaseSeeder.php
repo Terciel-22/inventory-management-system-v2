@@ -16,13 +16,9 @@ class DatabaseSeeder extends Seeder
     {
         $max = 100;
         for($c=1; $c<=$max; $c++) {
-            \App\Models\Item::factory()->create();
-            \App\Models\Vendor::factory()->create();
+            // \App\Models\Item::factory()->create();
+            // \App\Models\Vendor::factory()->create();
+            // \App\Models\Customer::factory()->create();
         }
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
     }
 }
