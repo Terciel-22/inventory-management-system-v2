@@ -8,6 +8,9 @@ use App\Http\Requests\StorePurchaseRequest;
 use App\Http\Requests\UpdatePurchaseRequest;
 use App\Http\Resources\PurchaseResource;
 
+use App\Models\Item;
+use App\Http\Resources\ItemResource;
+
 class PurchaseController extends Controller
 {
     /**
@@ -31,7 +34,13 @@ class PurchaseController extends Controller
     public function store(StorePurchaseRequest $request)
     {
         $data = $request->validated();
-        
+
+        $item = Item::where("item_number", $data["item_number"])
+            ->firstOrFail();
+        $item->update([
+            "stock" => $data["new_stock"],
+        ]);
+
         $purchase = Purchase::create($data);
         return response(new PurchaseResource($purchase), 201);
     }
@@ -44,7 +53,12 @@ class PurchaseController extends Controller
      */
     public function show(Purchase $purchase)
     {
-        return new PurchaseResource($purchase);
+        $item = Item::where("item_number", $purchase["item_number"])
+            ->firstOrFail();
+        return [
+            'item' => new ItemResource($item),
+            'purchase' => new PurchaseResource($purchase),
+        ];
     }
 
     /**

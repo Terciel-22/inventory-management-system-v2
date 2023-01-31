@@ -32,6 +32,7 @@ class StorePurchaseRequest extends FormRequest
             'vendor_name' => 'required|string',
             'vendor_id' => 'required|integer',
             'purchase_date' => 'required|date',
+            'new_stock' => 'required|numeric'
         ];
     }
 }

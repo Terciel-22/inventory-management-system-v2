@@ -24,10 +24,7 @@ class UpdatePurchaseRequest extends FormRequest
     public function rules()
     {
         return [
-            'item_number' => 'required|integer',
-            'item_name' => 'required|string',
             'unit_price' => 'required|numeric|min:1',
-            'quantity' => 'required|numeric|min:0|max:'.$this->current_stock,
             'total_cost' => 'required|numeric',
             'vendor_name' => 'required|string',
             'vendor_id' => 'required|integer',

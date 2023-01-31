@@ -14,6 +14,7 @@ export default function Purchase() {
   const currentStockRef = useRef();
   const vendorNameRef = useRef();
   const quantityRef = useRef();
+  const newStockRef = useRef();
   const unitPriceRef = useRef();
   const totalCostRef = useRef();
   const updateButtonRef = useRef();
@@ -80,6 +81,7 @@ export default function Purchase() {
 
     if(event.target.name === "quantity" || event.target.name === "unit_price")
     {
+      newStockRef.current.value = currentStockRef.current.value - quantityRef.current.value;
       totalCostRef.current.value = quantityRef.current.value * unitPriceRef.current.value;
     }
   }
@@ -110,15 +112,34 @@ export default function Purchase() {
         }
       });
     }
+
+    if(event.target.name === "update")
+    {
+      axiosClient.post(`/purchases/${purchaseIDRef.current.value}?_method=PUT`, purchaseFormData)
+      .then(()=>{
+        setNotification("Successfully updated purchase.");
+        setErrors("");
+      })
+      .catch(error=>{
+        const response = error.response;
+        if(response && response.status === 422) {
+          setErrors(response.data.errors);
+        }
+      });
+    }
   }
   const displayDataToFormField = (data) => {
-    itemNumberRef.current.value = data.item_number;
-    purchaseDateRef.current.value = data.purchase_date;
-    itemNameRef.current.value = data.item_name;
-    vendorNameRef.current.value = data.vendor_name;
-    quantityRef.current.value = data.quantity;
-    unitPriceRef.current.value = data.unit_price;
-    totalCostRef.current.value = data.total_cost;
+    itemNumberRef.current.value = data.purchase.item_number;
+    purchaseDateRef.current.value = data.purchase.purchase_date;
+    itemNameRef.current.value = data.purchase.item_name;
+    currentStockRef.current.value = data.item.stock;
+    vendorNameRef.current.value = data.purchase.vendor_name;
+    quantityRef.current.value = data.purchase.quantity;
+    unitPriceRef.current.value = data.purchase.unit_price;
+    totalCostRef.current.value = data.purchase.total_cost;
+
+    itemNumberRef.current.setAttribute("readOnly",true);
+    quantityRef.current.setAttribute("readOnly",true);
   }
   const resetForm = () => {
     itemNumberRef.current.value = "";
@@ -132,6 +153,8 @@ export default function Purchase() {
     updateButtonRef.current.value = "";
 
     updateButtonRef.current.setAttribute("disabled",true);
+    itemNumberRef.current.removeAttribute("readOnly");
+    quantityRef.current.removeAttribute("readOnly");
 
     setErrors("");
   }
@@ -180,6 +203,7 @@ export default function Purchase() {
         <div className="form-group">
           <label htmlFor="quantity">Quantity</label>
           <input type="number" min="0" id="quantity" name="quantity" onChange={handleChange} ref={quantityRef}/>
+          <input type="hidden" name="new_stock" ref={newStockRef}/>
         </div>
         <div className="form-group">
           <label htmlFor="unit-price">Unit Price</label>
@@ -192,7 +216,7 @@ export default function Purchase() {
       </div>
       <div className="buttons row">
         <button type="button" name="add" onClick={handleClick}>Add</button>
-        <button type="button" name="update" ref={updateButtonRef}>Update</button>
+        <button type="button" name="update" onClick={handleClick} ref={updateButtonRef}>Update</button>
         <button type="button" name="reset" onClick={handleClick}>Reset</button>
       </div>
     </form>
