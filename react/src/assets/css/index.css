@@ -41,10 +41,19 @@ button:disabled {
 .id-selector,
 .id-selector::placeholder,
 input:disabled::placeholder,
+input:read-only::placeholder,
 input:disabled {
     color: rgba(255, 255, 255, 0.8);
 }
-
+input:read-only,
+.id-selector {
+    background: rgba(239, 239, 239, 0.3);
+}
+input:read-only {
+    cursor: context-menu;
+    outline: none;
+    color: rgba(255, 255, 255, 0.8);
+}
 a {
     text-decoration: none;
 }
@@ -65,9 +74,6 @@ label {
 .row {
     display: flex;
     justify-content: space-between;
-}
-.id-selector {
-    background-color: rgba(239, 239, 239, 0.3);
 }
 .notification {
     color: #fff;

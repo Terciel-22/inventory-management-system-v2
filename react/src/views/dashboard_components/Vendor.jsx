@@ -29,6 +29,7 @@ export default function Vendor(){
     fetch(`https://psgc.gitlab.io/api/regions/`)
       .then(response => response.json())
       .then((regions)=>{
+        regionRef.current.innerHTML = `<option value="" hidden>--Select Region--</option>`;
         Object.values(regions).forEach(region => {
           regionRef.current.innerHTML += `<option value="${region.name}" id="${region.code}">${region.name}</option>`;
         });
@@ -39,6 +40,7 @@ export default function Vendor(){
     event.preventDefault();
     if(event.target.name === "reset")
     {
+      vendorIDRef.current.value = "";
       resetForm();
       return;
     }

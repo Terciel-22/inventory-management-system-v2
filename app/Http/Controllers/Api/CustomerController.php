@@ -18,7 +18,7 @@ class CustomerController extends Controller
     public function index()
     {
         return CustomerResource::collection(
-            Customer::query()->orderBy('id','desc')->paginate(10)
+            Customer::query()->orderBy('id','asc')->paginate(10)
         );
     }
 

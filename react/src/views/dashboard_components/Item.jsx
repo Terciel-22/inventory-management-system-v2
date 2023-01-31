@@ -147,80 +147,80 @@ export default function Item() {
 
   return (
     <form ref={itemFormRef} className="form-tab active" id="item" encType="multipart/form-data">
-        {errors && 
-          <div className="error-message">
-            {Object.keys(errors).map(key=>{
-              return <p key={key}>{errors[key][0]}</p>
-            })}
-          </div>
-        }
-        <h1>Item</h1>
-        <div className="row">
-          <div className="column-1">
-            <label htmlFor="item-image">Image <br />
-              <input type="file" name="image_url" id="item-image" accept="image/*" onChange={handleFileInput}/>
-              <img  ref={imageURLRef} alt="Item image" />
-            </label>
-          </div>
-          <div className="column-2">
-            <div className="row">
-              <div className="form-group">
-                <label htmlFor="item-number">Item Number</label>
-                <input ref={itemNumberRef} type="text" id="itemNumber" name="item_number" onChange={handleChange}/>
-              </div>
-              <div className="form-group">
-                <label htmlFor="product-id">Product ID</label>
-                <input ref={productIDRef} type="text" id="product-id" disabled placeholder="Auto-generate" />
-              </div>
-            </div>
-            <div className="row">
-              <div className="form-group">
-                <label htmlFor="item-name">Item Name</label>
-                <input ref={itemNameRef} type="text" id="item-name" name="item_name"/>
-              </div>
-              <div className="form-group">
-                <label htmlFor="item-status">Status</label>
-                <select ref={statusRef} name="status" id="item-status">
-                  <option value="" hidden>--Select Status--</option>
-                  <option value="active">Active</option>
-                  <option value="disabled">Disabled</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label htmlFor="item-date">Date Created</label>
-                <input ref={dateCreatedRef} type="date" id="item-date" name="created_at" disabled/>
-              </div>
+      {errors && 
+        <div className="error-message">
+          {Object.keys(errors).map(key=>{
+            return <p key={key}>{errors[key][0]}</p>
+          })}
+        </div>
+      }
+      <h1>Item</h1>
+      <div className="row">
+        <div className="column-1">
+          <label htmlFor="item-image">Image <br />
+            <input type="file" name="image_url" id="item-image" accept="image/*" onChange={handleFileInput}/>
+            <img  ref={imageURLRef} alt="Item image" />
+          </label>
+        </div>
+        <div className="column-2">
+          <div className="row">
+            <div className="form-group">
+              <label htmlFor="item-number">Item Number</label>
+              <input ref={itemNumberRef} type="text" id="itemNumber" name="item_number" onChange={handleChange}/>
             </div>
             <div className="form-group">
-              <label htmlFor="item-description">Description</label>
-              <textarea ref={descriptionRef} name="description" id="item-description" rows="12"></textarea>
+              <label htmlFor="product-id">Product ID</label>
+              <input ref={productIDRef} type="text" id="product-id" name="id" disabled placeholder="Auto-generate" />
             </div>
           </div>
+          <div className="row">
+            <div className="form-group">
+              <label htmlFor="item-name">Item Name</label>
+              <input ref={itemNameRef} type="text" id="item-name" name="item_name"/>
+            </div>
+            <div className="form-group">
+              <label htmlFor="item-status">Status</label>
+              <select ref={statusRef} name="status" id="item-status">
+                <option value="" hidden>--Select Status--</option>
+                <option value="active">Active</option>
+                <option value="disabled">Disabled</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label htmlFor="item-date">Date Created</label>
+              <input ref={dateCreatedRef} type="date" id="item-date" name="created_at" disabled/>
+            </div>
+          </div>
+          <div className="form-group">
+            <label htmlFor="item-description">Description</label>
+            <textarea ref={descriptionRef} name="description" id="item-description" rows="12"></textarea>
+          </div>
         </div>
-        <div className="row">
-          <div className="form-group">
-            <label htmlFor="item-discount">Discount %</label>
-            <input ref={discountRef} type="text" id="item-discount" name="discount"/>
-          </div>
-          <div className="form-group">
-            <label htmlFor="item-quantity">Quantity</label>
-            <input ref={quantityRef} type="number" min="0" id="item-quantity" name="stock"/>
-          </div>
-          <div className="form-group">
-            <label htmlFor="item-unit-price">Unit Price</label>
-            <input ref={unitPriceRef} type="text" id="item-unit-price" name="unit_price"/>
-          </div>
-          <div className="form-group">
-            <label htmlFor="item-total-stock">Total Stock</label>
-            <input ref={totalStockRef} type="text" id="item-total-stock" disabled placeholder="Auto-generate" name="totalStock"/>
-          </div>
+      </div>
+      <div className="row">
+        <div className="form-group">
+          <label htmlFor="item-discount">Discount %</label>
+          <input ref={discountRef} type="text" id="item-discount" name="discount"/>
         </div>
-        <div className="buttons row">
-          <button type="button" onClick={handleClick} name="add">Add</button>
-          <button ref={updateButtonRef} type="button" onClick={handleClick} name="update">Update</button>
-          <button ref={deleteButtonRef} type="button" onClick={handleClick} name="delete">Delete</button>
-          <button type="button" onClick={handleClick} name="reset">Reset</button>
+        <div className="form-group">
+          <label htmlFor="item-quantity">Quantity</label>
+          <input ref={quantityRef} type="number" min="0" id="item-quantity" name="stock"/>
         </div>
+        <div className="form-group">
+          <label htmlFor="item-unit-price">Unit Price</label>
+          <input ref={unitPriceRef} type="text" id="item-unit-price" name="unit_price"/>
+        </div>
+        <div className="form-group">
+          <label htmlFor="item-total-stock">Total Stock</label>
+          <input ref={totalStockRef} type="text" id="item-total-stock" disabled placeholder="Auto-generate" name="totalStock"/>
+        </div>
+      </div>
+      <div className="buttons row">
+        <button type="button" onClick={handleClick} name="add">Add</button>
+        <button ref={updateButtonRef} type="button" onClick={handleClick} name="update">Update</button>
+        <button ref={deleteButtonRef} type="button" onClick={handleClick} name="delete">Delete</button>
+        <button type="button" onClick={handleClick} name="reset">Reset</button>
+      </div>
     </form>
   )
 }

@@ -18,7 +18,7 @@ class VendorController extends Controller
     public function index()
     {
         return VendorResource::collection(
-            Vendor::query()->orderBy('id','desc')->paginate(10)
+            Vendor::query()->orderBy('id','asc')->paginate(10)
         );
     }
 

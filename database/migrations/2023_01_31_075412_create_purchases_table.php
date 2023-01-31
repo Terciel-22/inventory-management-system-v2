@@ -13,16 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('items', function (Blueprint $table) {
+        Schema::create('purchases', function (Blueprint $table) {
             $table->id();
-            $table->integer('item_number')->unique();
+            $table->integer('item_number');
             $table->string('item_name');
-            $table->integer('discount')->unsigned();
-            $table->integer('stock')->unsigned();
             $table->decimal('unit_price', 12, 2)->unsigned();
-            $table->string('image_url')->nullable();
-            $table->string('status')->default('active');
-            $table->text('description')->nullable();
+            $table->integer('quantity')->unsigned();
+            $table->decimal('total_cost', 12, 2)->unsigned();
+            $table->string('vendor_name');
+            $table->string('vendor_id');
+            $table->date('purchase_date');
             $table->timestamps();
         });
     }
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('items');
+        Schema::dropIfExists('purchases');
     }
 };

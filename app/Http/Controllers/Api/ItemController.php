@@ -19,7 +19,7 @@ class ItemController extends Controller
     public function index()
     {
         return ItemResource::collection(
-            Item::query()->orderBy('id','desc')->paginate(10)
+            Item::query()->orderBy('id','asc')->paginate(10)
         );
     }
 

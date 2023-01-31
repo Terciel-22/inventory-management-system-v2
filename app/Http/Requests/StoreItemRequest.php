@@ -27,9 +27,9 @@ class StoreItemRequest extends FormRequest
             'item_number' => 'required|integer|unique:items,item_number',
             'item_name' => 'required|string',
             'description' => 'required|string',
-            'stock' => 'numeric|min:0',
-            'discount' => 'numeric|min:0',
-            'unit_price' => 'numeric|min:1',
+            'stock' => 'required|numeric|min:0',
+            'discount' => 'required|numeric|min:0',
+            'unit_price' => 'required|numeric|min:1',
             'image_url' => 'nullable|image|max:2048',
             'status' => 'required|string',
         ];

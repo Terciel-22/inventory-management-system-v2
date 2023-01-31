@@ -23,7 +23,7 @@ class UpdateCustomerRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        return [ 
             'full_name' => 'required|string|',
             'mobile' => 'required|numeric|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
             'telephone' => 'nullable|string|regex:/^([0-9\s\-\+\(\)]*)$/|max:11',
