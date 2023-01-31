@@ -207,9 +207,11 @@ main#form-page > #form-container > form > p {
 }
 .column-1 > label {
     padding: 0 1rem 1rem 0;
+}
+.column-1 > label.upload {
     cursor: pointer;
 }
-.column-1 > label::after {
+.column-1 > label.upload::after {
     content: "Click to upload new image";
     position: absolute;
     color: red;

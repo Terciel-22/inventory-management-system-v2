@@ -81,7 +81,7 @@ export default function Purchase() {
 
     if(event.target.name === "quantity" || event.target.name === "unit_price")
     {
-      newStockRef.current.value = currentStockRef.current.value - quantityRef.current.value;
+      newStockRef.current.value = parseInt(currentStockRef.current.value) + parseInt(quantityRef.current.value);
       totalCostRef.current.value = quantityRef.current.value * unitPriceRef.current.value;
     }
   }

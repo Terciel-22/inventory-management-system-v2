@@ -27,7 +27,7 @@ class StorePurchaseRequest extends FormRequest
             'item_number' => 'required|integer',
             'item_name' => 'required|string',
             'unit_price' => 'required|numeric|min:1',
-            'quantity' => 'required|numeric|min:0|max:'.$this->current_stock,
+            'quantity' => 'required|numeric|min:1',
             'total_cost' => 'required|numeric',
             'vendor_name' => 'required|string',
             'vendor_id' => 'required|integer',

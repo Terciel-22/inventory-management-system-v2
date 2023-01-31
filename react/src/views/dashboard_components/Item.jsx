@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useState } from 'react';
-import imageNotAvailable from "../../assets/img/image-not-available.jpg"
+import imageNotAvailable from "../../assets/img/image-not-available.jpg";
 import axiosClient from '../../AxiosClient';
 import { useStateContext } from '../../contexts/ContextProvider';
 
@@ -156,8 +156,8 @@ export default function Item() {
       }
       <h1>Item</h1>
       <div className="row">
-        <div className="column-1">
-          <label htmlFor="item-image">Image <br />
+        <div className="column-1"> 
+          <label htmlFor="item-image" className="upload">Image <br />
             <input type="file" name="image_url" id="item-image" accept="image/*" onChange={handleFileInput}/>
             <img  ref={imageURLRef} alt="Item image" />
           </label>
