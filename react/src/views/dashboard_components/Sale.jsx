@@ -111,7 +111,13 @@ export default function Sale() {
       {
         axiosClient.get(`/customers/${customerID}`)
           .then(({data})=>{
-            customerNameRef.current.value = data.full_name;
+            if(data.status === "active")
+            {
+              customerNameRef.current.value = data.full_name;
+            } else 
+            {
+              customerNameRef.current.value = "";
+            }
           })
           .catch(()=>{
             customerNameRef.current.value = "";
@@ -132,10 +138,18 @@ export default function Sale() {
         }
         axiosClient.post("/item", payload)
           .then(({data})=>{
-            itemNameRef.current.value = data.item_name;
-            currentStockRef.current.value = data.stock;
-            quantityRef.current.setAttribute("max",data.stock);
-            imageURLRef.current.setAttribute("src",data.image_url);
+            if(data.status === "active")
+            {
+              itemNameRef.current.value = data.item_name;
+              currentStockRef.current.value = data.stock;
+              quantityRef.current.setAttribute("max",data.stock);
+              imageURLRef.current.setAttribute("src",data.image_url);
+            } else 
+            {
+              itemNameRef.current.value = "";
+              currentStockRef.current.value = "";
+              imageURLRef.current.setAttribute("src",imageNotAvailable);
+            }
           })
           .catch(()=>{
             itemNameRef.current.value = "";

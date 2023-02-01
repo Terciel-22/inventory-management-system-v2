@@ -23,11 +23,14 @@ export default function Purchase() {
   
   useEffect(()=>{
     resetForm();
-    axiosClient.get(`/vendors`)
+    axiosClient.get(`/vendors?size=all`)
     .then(({data})=>{
       vendorNameRef.current.innerHTML = `<option value="" hidden>--Select Vendor--</option>`;
       Object.values(data.data).forEach(vendor => {
-        vendorNameRef.current.innerHTML += `<option value="${vendor.full_name}" id="${vendor.id}">${vendor.full_name}</option>`;
+        if(vendor.status === "active")
+        {
+          vendorNameRef.current.innerHTML += `<option value="${vendor.full_name}" id="${vendor.id}">${vendor.full_name}</option>`;
+        }
       });
     })
   },[]);

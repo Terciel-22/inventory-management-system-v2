@@ -102,14 +102,13 @@ header > .container > nav > ul > li {
     list-style: none;
     margin: 0.625rem 1.25rem;
 }
-header > .container > nav > ul > li > a.nav-link {
+a.nav-link {
     color: #fff;
-    text-decoration:  none;
     font-size: 1.125rem;
     position: relative;
     cursor: pointer;
 }
-header > .container > nav > ul > li > a.nav-link::after {
+a.nav-link::after {
     content: "";
     width: 0;
     height: 0.19rem;
@@ -119,8 +118,8 @@ header > .container > nav > ul > li > a.nav-link::after {
     bottom: -0.375rem;
     transition: 0.5s;
 }
-header > .container > nav > ul > li > a.nav-link:hover::after,
-header > .container > nav > ul > li > a.nav-link.active::after {
+a.nav-link:hover::after,
+a.nav-link.active::after {
     width: 100%;
 }
 
@@ -176,10 +175,12 @@ main#form-page > #form-container > form > p {
 .form-tab.active {
     display: block;
 }
-.form-tab > .buttons {
+.form-tab > .buttons,
+.table-tabs > .buttons {
     justify-content: flex-end;
 }
-.form-tab > .buttons > button{
+.form-tab > .buttons > button,
+.table-tabs > .buttons > button{
     color: white;
     margin-right: 1rem;
     border: 1px solid #ff004f;
@@ -228,4 +229,52 @@ main#form-page > #form-container > form > p {
 }
 .column-1 > label > img {
     width: 100%;
+}
+
+/* REPORTS */
+#reports > .row > .side-bar > ul > li{
+    list-style: none;
+    margin-top: 1rem;
+}
+.table-tabs {
+    color: #fff;
+    display: none;
+    margin-left: 2rem;
+}
+.table-tabs.active {
+    display: block;
+}
+a.table-nav-link {
+    color: #fff;
+    font-size: 1.125rem;
+    position: relative;
+    cursor: pointer;
+}
+a.table-nav-link::after {
+    content: "";
+    width: 0;
+    height: 0.19rem;
+    background: #ff004f;
+    position: absolute;
+    left: 0;
+    bottom: -0.375rem;
+    transition: 0.5s;
+}
+a.table-nav-link:hover::after,
+a.table-nav-link.active::after {
+    width: 100%;
+}
+table,th,td {
+    border: 1px solid #ff004f;
+}
+table {
+    margin-bottom: 1rem;
+    border-collapse: collapse;
+}
+th {
+    padding: 1rem;
+}
+tfoot > tr > td {
+    border: none;
+    font-weight: 700;
 }

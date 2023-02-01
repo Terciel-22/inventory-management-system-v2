@@ -8,6 +8,8 @@ use App\Http\Requests\StoreVendorRequest;
 use App\Http\Requests\UpdateVendorRequest;
 use App\Http\Resources\VendorResource;
 
+use Illuminate\Http\Request;
+
 class VendorController extends Controller
 {
     /**
@@ -15,8 +17,16 @@ class VendorController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $size_of_data = $request->size;
+        if($size_of_data == "all")
+        {
+            return VendorResource::collection(
+                Vendor::all()
+            );
+        }
+
         return VendorResource::collection(
             Vendor::query()->orderBy('id','asc')->paginate(10)
         );
