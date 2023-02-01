@@ -36,7 +36,8 @@ export default function Item() {
       resetForm();
       return;
     } 
-    else if(event.target.name === "delete")
+    
+    if(event.target.name === "delete")
     {
       if(window.confirm("Are you sure you want to delete this item?"))
       {
@@ -65,7 +66,8 @@ export default function Item() {
         }
       });
     } 
-    else if(event.target.name === "update")
+    
+    if(event.target.name === "update")
     {
       axiosClient.post(`/items/${productIDRef.current.value}?_method=PUT`,itemFormData)
       .then(()=>{

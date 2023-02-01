@@ -38,13 +38,15 @@ export default function Vendor(){
   
   const handleClick = (event) => {
     event.preventDefault();
+    
     if(event.target.name === "reset")
     {
       vendorIDRef.current.value = "";
       resetForm();
       return;
     }
-    else if (event.target.name === "delete")
+    
+    if (event.target.name === "delete")
     {
       if(window.confirm("Are you sure you want to delete this vendor?"))
       {
@@ -77,7 +79,8 @@ export default function Vendor(){
         }
       });
     }
-    else if(event.target.name === "update")
+    
+    if(event.target.name === "update")
     {
       axiosClient.post(`/vendors/${vendorIDRef.current.value}?_method=PUT`,vendorFormData)
       .then(()=>{
@@ -101,8 +104,6 @@ export default function Vendor(){
         axiosClient.get(`/vendors/${vendorID}`)
           .then(({data})=>{
             displayDataToFormField(data);
-            updateButtonRef.current.removeAttribute("disabled");
-            deleteButtonRef.current.removeAttribute("disabled");
           })
           .catch(()=>{
             resetForm();
@@ -194,7 +195,11 @@ export default function Vendor(){
       });
   }
   const displayDataToFormField = async (data) => {
+
     resetForm();
+    updateButtonRef.current.removeAttribute("disabled");
+    deleteButtonRef.current.removeAttribute("disabled");
+
     fullNameRef.current.value = data.full_name;
     statusRef.current.value = data.status;
     mobileRef.current.value = data.mobile;

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateItemRequest extends FormRequest
+class StoreSaleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,14 +24,16 @@ class UpdateItemRequest extends FormRequest
     public function rules()
     {
         return [
-            'item_number' => 'required|integer|unique:items,item_number,'.$this->item->id,
+            'item_number' => 'required|numeric',
+            'customer_id' => 'required|numeric',
+            'customer_name' => 'required|string',
             'item_name' => 'required|string',
-            'description' => 'required|string',
-            'stock' => 'required|numeric|min:0',
+            'sale_date' => 'required|date',
             'discount' => 'required|numeric|min:0|max:100',
+            'quantity' => 'required|numeric|min:1|max:'.$this->current_stock,
             'unit_price' => 'required|numeric|min:1',
-            'image_url' => 'nullable|image|max:2048',
-            'status' => 'required|string',
+            'total_cost' => 'required|numeric|min:1',
+            'new_stock' => 'required|numeric',
         ];
     }
 }

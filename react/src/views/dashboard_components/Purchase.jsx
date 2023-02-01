@@ -46,7 +46,6 @@ export default function Purchase() {
           .then(({data})=>{
             itemNameRef.current.value = data.item_name;
             currentStockRef.current.value = data.stock;
-            quantityRef.current.setAttribute("max",data.stock);
           })
           .catch(()=>{
             itemNameRef.current.value = "";
@@ -68,7 +67,6 @@ export default function Purchase() {
         axiosClient.get(`/purchases/${purchaseID}`)
           .then(({data})=>{
             displayDataToFormField(data);
-            updateButtonRef.current.removeAttribute("disabled");
           })
           .catch(()=>{
             resetForm();
@@ -138,6 +136,7 @@ export default function Purchase() {
     unitPriceRef.current.value = data.purchase.unit_price;
     totalCostRef.current.value = data.purchase.total_cost;
 
+    updateButtonRef.current.removeAttribute("disabled");
     itemNumberRef.current.setAttribute("readOnly",true);
     quantityRef.current.setAttribute("readOnly",true);
   }

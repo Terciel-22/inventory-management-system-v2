@@ -7,6 +7,7 @@ use App\Http\Controllers\API\ItemController;
 use App\Http\Controllers\API\VendorController;
 use App\Http\Controllers\API\CustomerController;
 use App\Http\Controllers\API\PurchaseController;
+use App\Http\Controllers\API\SaleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +29,7 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::apiResource("/vendors", VendorController::class);
     Route::apiResource("/customers", CustomerController::class);
     Route::apiResource("/purchases", PurchaseController::class);
+    Route::apiResource("/sales", SaleController::class);
     Route::post("/logout", [AuthController::class, "logout"]);
 });
 Route::post("/login", [AuthController::class, "login"]);
