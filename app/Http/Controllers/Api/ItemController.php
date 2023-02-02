@@ -16,10 +16,12 @@ class ItemController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index(Request $request)
+    {   
+        $keyword = $request->keyword ?? "";
+        $pageSize = $request->page_size ?? 10;
         return ItemResource::collection(
-            Item::query()->orderBy('id','asc')->paginate(10)
+            Item::query()->where('item_name','LIKE','%'.$keyword.'%')->orderBy('id','asc')->paginate($pageSize)
         );
     }
 
@@ -101,5 +103,12 @@ class ItemController extends Controller
             ->firstOrFail();
 
         return new ItemResource($item);
+    }
+
+    public function getTotalUnitPrice()
+    {
+        return [
+            'total_unit_price' => Item::sum('unit_price'),
+        ];
     }
 }

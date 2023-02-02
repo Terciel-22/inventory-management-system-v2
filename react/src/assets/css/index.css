@@ -180,7 +180,8 @@ main#form-page > #form-container > form > p {
     justify-content: flex-end;
 }
 .form-tab > .buttons > button,
-.table-tabs > .buttons > button{
+.table-tabs > .buttons > button,
+#printButtons > button{
     color: white;
     margin-right: 1rem;
     border: 1px solid #ff004f;
@@ -277,4 +278,8 @@ th {
 tfoot > tr > td {
     border: none;
     font-weight: 700;
+}
+.table-tabs > .row > label > select,
+.table-tabs > .row > label > input{
+    padding: 0.4rem;
 }

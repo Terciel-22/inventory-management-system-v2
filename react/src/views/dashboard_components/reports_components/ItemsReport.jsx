@@ -1,7 +1,10 @@
 import { useRef,useEffect,useState } from 'react';
 import axiosClient from '../../../AxiosClient';
+import useExportPDF from '../../../customhooks/useExportPDF';
 
 export default function ItemsReport() {
+
+  const [setReport] = useExportPDF();
 
   const captionRef = useRef();
   const tbodyRef = useRef();
@@ -9,6 +12,10 @@ export default function ItemsReport() {
   const nextButtonRef = useRef();
   const totalUnitPriceRef = useRef();
   
+  const [pageSize, setPageSize] = useState(10);
+  const [pageNumber, setPageNumber] = useState("page=1");
+  const [maxPageSize, setMaxPageSize] = useState(0);
+  const [keyword, setKeyword] = useState("");
   const [firstLink, setFirstLink] = useState("");
   const [prevLink, setPrevLink] = useState("");
   const [nextLink, setNextLink] = useState("");
@@ -16,39 +23,63 @@ export default function ItemsReport() {
 
   useEffect(()=>{
     displayDataToTable();
-  },[]);
+  },[pageSize,pageNumber,keyword]);
 
+  const handleChange = (event) => {
+    if(event.target.name === "entries_count")
+    {
+      setPageSize(event.target.value);
+      setPageNumber(1);
+    }
+    if(event.target.name === "search")
+    {
+      setKeyword(`keyword=${event.target.value}`);
+      setPageNumber(1);
+    }
+  }
   const handleClick = (event) => {
     event.preventDefault();
     if(event.target.name === "first")
     {
       const splitedLink = firstLink.split("?");
-      displayDataToTable("?"+splitedLink[1]);
+      setPageNumber(splitedLink[1]);
     }
     if(event.target.name === "prev")
     {
       const splitedLink = prevLink.split("?");
-      displayDataToTable("?"+splitedLink[1]);
+      setPageNumber(splitedLink[1]);
     }
     if(event.target.name === "next")
     {
       const splitedLink = nextLink.split("?");
-      displayDataToTable("?"+splitedLink[1]);
+      setPageNumber(splitedLink[1]);
     }
     if(event.target.name === "last")
     {
       const splitedLink = lastLink.split("?");
-      displayDataToTable("?"+splitedLink[1]);
+      setPageNumber(splitedLink[1]);
+    }
+
+    if(event.target.name === "pdf")
+    {
+      setReport({
+        title:"Items Report",
+        table_id:"#itemsTable",
+        filename:"ItemsReport.pdf"
+      });
     }
   }
-  const displayDataToTable = (params = "") => {
+  const displayDataToTable = () => {
     captionRef.current.innerHTML = "Loading...";
-    axiosClient.get("/items"+params)
+    axiosClient.get(`/items?page_size=${pageSize}&${pageNumber}&${keyword}`)
     .then(({data})=>{
-      console.log(data);
+
+      setMaxPageSize(data.meta.total);
+
       captionRef.current.innerHTML = `Page ${data.meta.current_page} out of ${data.meta.last_page}`;
+
       tbodyRef.current.innerHTML = "";
-      let totalUnitPrice = 0;
+      let pageTotalUnitPrice_float = 0;
       Object.values(data.data).forEach(item => {
         tbodyRef.current.innerHTML += `
           <tr>
@@ -63,10 +94,12 @@ export default function ItemsReport() {
           </tr>
         `;
 
-        totalUnitPrice += parseInt(item.unit_price);
+        pageTotalUnitPrice_float += parseFloat(item.unit_price);
       });
-
-      totalUnitPriceRef.current.innerHTML = totalUnitPrice.toLocaleString("en-US", {style:"currency", currency:"PHP"});
+      const pageTotalUnitPrice_str = pageTotalUnitPrice_float.toLocaleString("en-US");
+      
+      displayTotalUnitPrice(pageTotalUnitPrice_str);
+      
       setFirstLink(data.links.first);
       setLastLink(data.links.last);
 
@@ -88,11 +121,40 @@ export default function ItemsReport() {
       }
     })
   }
+  const displayTotalUnitPrice = (pageTotalUnitPrice_str) => {
+    totalUnitPriceRef.current.innerHTML = "Loading...";
+    axiosClient.get("items-total-unit-price")
+    .then(({data})=>{
+      const totalOfAllUnitPrice_float = parseFloat(data.total_unit_price);
+      const totalOfAllUnitPrice_str = totalOfAllUnitPrice_float.toLocaleString("en-US");
+      totalUnitPriceRef.current.innerHTML = `PHP ${pageTotalUnitPrice_str} <br/> (PHP ${totalOfAllUnitPrice_str} Total)`;
+    })
+  }
 
   return (
     <div className="table-tabs active" id="items-table">
       <h2>Items Report</h2>
-      <table>
+      <div className="row">
+        <label htmlFor="entries-count">Show &nbsp;
+          <select name="entries_count" id="entries-count" onChange={handleChange}>
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value={maxPageSize}>All</option>
+          </select>
+          &nbsp; entries
+        </label>
+        <label htmlFor="search">
+          Search&nbsp;
+          <input type="text" id="search" name="search" placeholder="Search item name" onChange={handleChange}/>
+        </label>
+        <div id="printButtons">
+          <button name="pdf" onClick={handleClick}>
+            PDF
+          </button>
+        </div>
+      </div>
+      <table id="itemsTable">
         <caption ref={captionRef}>Loading...</caption>
         <thead>
           <tr>
