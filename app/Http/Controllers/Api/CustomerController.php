@@ -8,6 +8,8 @@ use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use App\Http\Resources\CustomerResource;
 
+use Illuminate\Http\Request;
+
 class CustomerController extends Controller
 {
     /**
@@ -15,10 +17,13 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $keyword = $request->keyword ?? "";
+        $pageSize = $request->page_size ?? 10;
+
         return CustomerResource::collection(
-            Customer::query()->orderBy('id','asc')->paginate(10)
+            Customer::query()->where('full_name','LIKE','%'.$keyword.'%')->orderBy('id','asc')->paginate($pageSize)
         );
     }
 

@@ -11,7 +11,7 @@ use App\Http\Resources\ItemResource;
 
 class ItemController extends Controller
 {
-    /**
+    /** 
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -111,4 +111,4 @@ class ItemController extends Controller
             'total_unit_price' => Item::sum('unit_price'),
         ];
     }
-}
+} 

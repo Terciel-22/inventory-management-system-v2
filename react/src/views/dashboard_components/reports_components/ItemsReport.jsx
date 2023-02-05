@@ -123,7 +123,7 @@ export default function ItemsReport() {
   }
   const displayTotalUnitPrice = (pageTotalUnitPrice_str) => {
     totalUnitPriceRef.current.innerHTML = "Loading...";
-    axiosClient.get("items-total-unit-price")
+    axiosClient.get("/items-total-unit-price")
     .then(({data})=>{
       const totalOfAllUnitPrice_float = parseFloat(data.total_unit_price);
       const totalOfAllUnitPrice_str = totalOfAllUnitPrice_float.toLocaleString("en-US");
@@ -150,32 +150,34 @@ export default function ItemsReport() {
         </label>
         <div id="printButtons">
           <button name="pdf" onClick={handleClick}>
-            PDF
+            Print
           </button>
         </div>
       </div>
-      <table id="itemsTable">
-        <caption ref={captionRef}>Loading...</caption>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Item Number</th>
-            <th>Item Name</th>
-            <th>Stock</th>
-            <th>Discount %</th>
-            <th>Unit Price</th>
-            <th>Status</th>
-            <th>Date Created</th>
-          </tr>
-        </thead>
-        <tbody ref={tbodyRef}></tbody>
-        <tfoot>
-          <tr>
-            <td colSpan={5}>Total:</td>
-            <td ref={totalUnitPriceRef}></td>
-          </tr>
-        </tfoot>
-      </table>
+      <div className="table-container">
+        <table id="itemsTable">
+          <caption ref={captionRef}>Loading...</caption>
+          <thead>
+            <tr>
+              <th>Product ID</th>
+              <th>Item Number</th>
+              <th>Item Name</th>
+              <th>Stock</th>
+              <th>Discount %</th>
+              <th>Unit Price</th>
+              <th>Status</th>
+              <th>Date Created</th>
+            </tr>
+          </thead>
+          <tbody ref={tbodyRef}></tbody>
+          <tfoot>
+            <tr>
+              <td colSpan={5}>Total:</td>
+              <td ref={totalUnitPriceRef}></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
 
       <div className="buttons row">
         <button name="first" onClick={handleClick}>First</button>

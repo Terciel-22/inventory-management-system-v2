@@ -28,7 +28,7 @@ export default function Reports() {
   return (
     <div className="form-tab" id="reports">
       <h1>Reports</h1>
-      <div className="row">
+      <div>
         <div className="side-bar">
           <ul>
             <li><a className="table-nav-link active" name="items-table" onClick={handleClick}>Items</a></li>

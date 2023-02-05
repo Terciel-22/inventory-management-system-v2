@@ -8,6 +8,7 @@ use App\Http\Requests\StorePurchaseRequest;
 use App\Http\Requests\UpdatePurchaseRequest;
 use App\Http\Resources\PurchaseResource;
 
+use Illuminate\Http\Request;
 use App\Models\Item;
 use App\Http\Resources\ItemResource;
 
@@ -18,10 +19,13 @@ class PurchaseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    { 
+    public function index(Request $request)
+    {  
+        $keyword = $request->keyword ?? "";
+        $pageSize = $request->page_size ?? 10;
+        
         return PurchaseResource::collection(
-            Purchase::query()->orderBy('id','asc')->paginate(10)
+            Purchase::query()->where('item_name','LIKE','%'.$keyword.'%')->orWhere('vendor_name','LIKE','%'.$keyword.'%')->orderBy('id','asc')->paginate($pageSize)
         );
     }
 
@@ -86,5 +90,26 @@ class PurchaseController extends Controller
     {
         $purchase->delete();
         return response("", 204);
+    }
+
+    public function getTotalQuantity()
+    {
+        return [
+            'total_quantity' => Purchase::sum('quantity'),
+        ];
+    }
+
+    public function getTotalUnitPrice()
+    {
+        return [
+            'total_unit_price' => Purchase::sum('unit_price'),
+        ];
+    }
+
+    public function getTotalTotalCost()
+    {
+        return [
+            'total_total_cost' => Purchase::sum('total_cost'),
+        ];
     }
 }

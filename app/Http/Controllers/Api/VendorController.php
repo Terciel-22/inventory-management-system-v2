@@ -26,9 +26,11 @@ class VendorController extends Controller
                 Vendor::all()
             );
         }
-
+        
+        $keyword = $request->keyword ?? "";
+        $pageSize = $request->page_size ?? 10;
         return VendorResource::collection(
-            Vendor::query()->orderBy('id','asc')->paginate(10)
+            Vendor::query()->where('full_name','LIKE','%'.$keyword.'%')->orderBy('id','asc')->paginate($pageSize)
         );
     }
 

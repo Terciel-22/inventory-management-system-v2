@@ -8,20 +8,24 @@ use App\Http\Requests\StoreSaleRequest;
 use App\Http\Requests\UpdateSaleRequest;
 use App\Http\Resources\SaleResource;
 
+use Illuminate\Http\Request;
 use App\Models\Item;
 use App\Http\Resources\ItemResource;
 
 class SaleController extends Controller
 {
-    /**
+    /** 
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $keyword = $request->keyword ?? "";
+        $pageSize = $request->page_size ?? 10;
+        
         return SaleResource::collection(
-            Sale::query()->orderBy('id','asc')->paginate(10)
+            Sale::query()->where('item_name','LIKE','%'.$keyword.'%')->orWhere('customer_name','LIKE','%'.$keyword.'%')->orderBy('id','asc')->paginate($pageSize)
         );
     }
 
@@ -86,5 +90,26 @@ class SaleController extends Controller
     {
         $sale->delete();
         return response("", 204);
+    }
+
+    public function getTotalQuantity()
+    {
+        return [
+            'total_quantity' => Sale::sum('quantity'),
+        ];
+    }
+
+    public function getTotalUnitPrice()
+    {
+        return [
+            'total_unit_price' => Sale::sum('unit_price'),
+        ];
+    }
+
+    public function getTotalTotalCost()
+    {
+        return [
+            'total_total_cost' => Sale::sum('total_cost'),
+        ];
     }
 }

@@ -74,6 +74,7 @@ label {
 .row {
     display: flex;
     justify-content: space-between;
+    gap: 1rem;
 }
 .notification {
     color: #fff;
@@ -183,7 +184,6 @@ main#form-page > #form-container > form > p {
 .table-tabs > .buttons > button,
 #printButtons > button{
     color: white;
-    margin-right: 1rem;
     border: 1px solid #ff004f;
 }
 .column-1 {
@@ -195,7 +195,6 @@ main#form-page > #form-container > form > p {
 .form-group {
     margin: 0rem 0 1rem 0;
     width: 100%;
-    padding-right: 1rem;
 }
 .form-group > input,
 .form-group > select,
@@ -233,7 +232,10 @@ main#form-page > #form-container > form > p {
 }
 
 /* REPORTS */
-#reports > .row > .side-bar > ul > li{
+#reports > div {
+    display: flex;
+}
+#reports > div > .side-bar > ul > li{
     list-style: none;
     margin-top: 1rem;
 }
@@ -265,15 +267,20 @@ a.table-nav-link:hover::after,
 a.table-nav-link.active::after {
     width: 100%;
 }
+.table-container {
+    margin-bottom: 1rem;
+    overflow-x: auto;
+    width: 60rem;
+}
 table,th,td {
     border: 1px solid #ff004f;
 }
 table {
-    margin-bottom: 1rem;
     border-collapse: collapse;
 }
-th {
+th,td {
     padding: 1rem;
+    text-align: center;
 }
 tfoot > tr > td {
     border: none;

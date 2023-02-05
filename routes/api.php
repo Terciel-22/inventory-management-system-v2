@@ -31,8 +31,17 @@ Route::middleware('auth:sanctum')->group(function() {
 
     Route::apiResource("/vendors", VendorController::class);
     Route::apiResource("/customers", CustomerController::class);
+
     Route::apiResource("/purchases", PurchaseController::class);
+    Route::get("/purchases-total-quantity", [PurchaseController::class, "getTotalQuantity"]);
+    Route::get("/purchases-total-unit-price", [PurchaseController::class, "getTotalUnitPrice"]);
+    Route::get("/purchases-total-total-cost", [PurchaseController::class, "getTotalTotalCost"]);
+
     Route::apiResource("/sales", SaleController::class);
+    Route::get("/sales-total-quantity", [SaleController::class, "getTotalQuantity"]);
+    Route::get("/sales-total-unit-price", [SaleController::class, "getTotalUnitPrice"]);
+    Route::get("/sales-total-total-cost", [SaleController::class, "getTotalTotalCost"]);
+
     Route::post("/logout", [AuthController::class, "logout"]);
 });
 Route::post("/login", [AuthController::class, "login"]);
